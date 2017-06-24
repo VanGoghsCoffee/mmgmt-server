@@ -4,10 +4,15 @@ import enum
 from mmgmt_server import db
 
 class Lang(db.Model):
+    __tablename__ = 'lang'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(96))
     iso_code = db.Column(db.String(10))
-    dishes = db.relationship('Dish', lazy='dynamic')
+    # dishes = db.relationship('Dish', lazy='dynamic')
+
+    def __init__(self, name, iso_code):
+        self.name = str(name)
+        self.iso_code = str(iso_code)
 
 
 recipe_dish = db.Table('recipe_dish',
@@ -21,6 +26,7 @@ recipe_dish = db.Table('recipe_dish',
 
 
 class Dish(db.Model):
+    __tablename__ = 'dish'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=True)
     lang_id = db.Column(db.Integer, db.ForeignKey('lang.id'))
@@ -29,7 +35,7 @@ class Dish(db.Model):
 
 
 class Recipe(db.Model):
-    __tablename__ ='recipe'
+    __tablename__ = 'recipe'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=True)
     create_date = db.Column(db.TIMESTAMP(timezone=True),
@@ -41,6 +47,7 @@ class Recipe(db.Model):
     
 
 class Amount_Unit(db.Model):
+    __tablename__ = 'amount_unit'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     amount = db.Column(db.Float, nullable=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
@@ -60,6 +67,7 @@ class EUnit(enum.Enum):
 
     
 class Unit(db.Model):
+    __tablename__ = 'unit'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     unit = db.Column(db.Enum(EUnit), nullable=True, default=EUnit.GRAM)
     val_in_gram = db.Column(db.Float, nullable=True)
@@ -67,10 +75,11 @@ class Unit(db.Model):
     
 
 class Ingredient(db.Model):
+    __tablename__ = 'ingredient'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     kcal100 = db.Column(db.Integer, nullable=False)
     protein100 = db.Column(db.Integer, nullable=False)
     fat100 = db.Column(db.Integer, nullable=False)
     carbs100 = db.Column(db.Integer, nullable=False)
-    units = db.relationship('Unit', backref='ingredient', lazy='dynamic')
+    # units = db.relationship('Unit', backref='ingredient', lazy='dynamic')
